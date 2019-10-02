@@ -10,13 +10,13 @@ pseq_monitor_SOURCES = \
 	pgood_monitor.cpp \
 	runtime_monitor.cpp \
 	ucd90160.cpp \
-        mihawk-cpld.cpp
+	mihawk-cpld.cpp
 
 nodist_pseq_monitor_SOURCES = \
 	ucd90160_defs.cpp
 
 pseq_monitor_LDADD = \
-        -li2c \
+	-li2c \
 	$(top_builddir)/libpower.la \
 	$(PHOSPHOR_LOGGING_LIBS) \
 	${PHOSPHOR_DBUS_INTERFACES_LIBS} \
