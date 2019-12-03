@@ -89,24 +89,6 @@ PowerSupply::PowerSupply(const std::string& name, size_t inst,
     powerOnTimer(e, std::bind([this]() { this->powerOn = true; }))
 {
     using namespace sdbusplus::bus;
-    using namespace witherspoon::pmbus;
-    std::uint16_t statusWord = 0;
-    try
-    {
-        // Read the 2 byte STATUS_WORD value to check for faults.
-        statusWord = pmbusIntf.read(STATUS_WORD, Type::Debug);
-        if (!((statusWord & status_word::INPUT_FAULT_WARN) ||
-              (statusWord & status_word::VIN_UV_FAULT)))
-        {
-            resolveError(inventoryPath,
-                         std::string(PowerSupplyInputFault::errName));
-        }
-    }
-    catch (ReadFailure& e)
-    {
-        log<level::INFO>("Unable to read the 2 byte STATUS_WORD value to check "
-                         "for power-supply input faults.");
-    }
     presentMatch = std::make_unique<match_t>(
         bus, match::rules::propertiesChanged(inventoryPath, INVENTORY_IFACE),
         [this](auto& msg) { this->inventoryChanged(msg); });
@@ -146,6 +128,7 @@ void PowerSupply::analyze()
 {
     using namespace witherspoon::pmbus;
 
+#ifdef UCD90160_DEVICE_ACCESS
     try
     {
         if (present)
@@ -183,6 +166,7 @@ void PowerSupply::analyze()
             readFailLogged = true;
         }
     }
+#endif
 
     return;
 }
@@ -676,6 +660,7 @@ void PowerSupply::updateInventory()
         {
         }
 
+#ifdef UCD90160_DEVICE_ACCESS
         try
         {
             ccin = pmbusIntf.readString(CCIN, Type::HwmonDeviceDebug);
@@ -683,7 +668,7 @@ void PowerSupply::updateInventory()
         catch (ReadFailure& e)
         {
         }
-
+#endif
         try
         {
             version = pmbusIntf.readString(FW_VERSION, Type::HwmonDeviceDebug);
@@ -704,7 +689,9 @@ void PowerSupply::updateInventory()
 
     assetProps.emplace(SN_PROP, sn);
     assetProps.emplace(PN_PROP, pn);
+#ifdef UCD90160_DEVICE_ACCESS
     assetProps.emplace(MODEL_PROP, ccin);
+#endif
     interfaces.emplace(ASSET_IFACE, std::move(assetProps));
 
     versionProps.emplace(VERSION_PROP, version);
