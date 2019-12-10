@@ -676,12 +676,15 @@ void PowerSupply::updateInventory()
         {
         }
 
-        try
+        if (!syncGPIODevPath.empty())
         {
-            ccin = pmbusIntf.readString(CCIN, Type::HwmonDeviceDebug);
-        }
-        catch (ReadFailure& e)
-        {
+            try
+            {
+                ccin = pmbusIntf.readString(CCIN, Type::HwmonDeviceDebug);
+            }
+            catch (ReadFailure& e)
+            {
+            }
         }
 
         try
@@ -704,7 +707,10 @@ void PowerSupply::updateInventory()
 
     assetProps.emplace(SN_PROP, sn);
     assetProps.emplace(PN_PROP, pn);
-    assetProps.emplace(MODEL_PROP, ccin);
+    if (!syncGPIODevPath.empty())
+    {
+        assetProps.emplace(MODEL_PROP, ccin);
+    }
     interfaces.emplace(ASSET_IFACE, std::move(assetProps));
 
     versionProps.emplace(VERSION_PROP, version);
