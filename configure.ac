@@ -84,6 +84,7 @@ AS_IF([test "x$enable_turn_off_mihawkcpld_access" != "xyes"],
       AC_DEFINE_UNQUOTED([MIHAWKCPLD_DEVICE_ACCESS], ["$MIHAWKCPLD_DEVICE_ACCESS"], [Turn off MIHAWKCPLD hardware access])
 )
 
+
 AC_ARG_VAR(UCD90160_DEF_YAML_FILE,
            [The sequencer definition file to use])
 AS_IF([test "x$UCD90160_DEF_YAML_FILE" == "x"],
@@ -98,11 +99,12 @@ AS_IF([test "x$UCD90160_DEF_OUTPUT_DIR" == "x"],
 AC_DEFINE_UNQUOTED([UCD90160_DEF_OUTPUT_DIR], ["$UCD90160_DEF_OUTPUT_DIR"],
                    [The output directory for the generated UCD90160 definition file])
 
+
+
 AC_SUBST([GEN_UCD90160_DEFS],
          ["$PYTHON \${top_srcdir}/power-sequencer/gen-ucd90160-defs.py \
                   -i $UCD90160_DEF_YAML_FILE \
                   -o $UCD90160_DEF_OUTPUT_DIR"])
-
 
 AC_ARG_VAR(INPUT_HISTORY_BUSNAME_ROOT, [The D-Bus busname root for the PS input history.])
 AS_IF([test "x$INPUT_HISTORY_BUSNAME_ROOT" == "x"],
@@ -117,6 +119,13 @@ AS_IF([test "x$INPUT_HISTORY_SENSOR_ROOT" == "x"],
 AC_DEFINE_UNQUOTED([INPUT_HISTORY_SENSOR_ROOT],
                    ["$INPUT_HISTORY_SENSOR_ROOT"],
                    [The D-Bus power sensors namespace root])
+
+
+AC_ARG_VAR(MIHAWK_PSU_NOT_ACCESS, [Turn on MIHAWK_PSU_NOT_ACCESS])
+AS_IF([test "x$INPUT_HISTORY_BUSNAME_ROOT" == "x"],
+      [MIHAWK_PSU_NOT_ACCESS = "yes"]
+      AC_DEFINE_UNQUOTED([MIHAWK_PSU_NOT_ACCESS], ["$MIHAWK_PSU_NOT_ACCESS"], [Turn on MIHAWK_PSU_NOT_ACCESS])
+)
 
 # Create configured output
 AC_CONFIG_FILES([Makefile power-sequencer/Makefile power-supply/Makefile test/Makefile power-supply/test/Makefile])
