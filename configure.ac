@@ -72,15 +72,15 @@ AS_IF([test "x$enable_turn_off_ucd90160_access" != "xyes"],
       AC_DEFINE_UNQUOTED([UCD90160_DEVICE_ACCESS], ["$UCD90160_DEVICE_ACCESS"], [Turn off UCD90160 hardware access])
 )
 
-AC_ARG_ENABLE([turn-off-mowglicpld-access],
-    AS_HELP_STRING([--enable-turn-off-mowglicpld-access], [Turn off MOWGLICPLD hardware access])
+AC_ARG_ENABLE([turn-on-mowglicpld-access],
+    AS_HELP_STRING([--enable-turn-on-mowglicpld-access], [Turn on MOWGLICPLD hardware access])
 )
 
 # Add define MOWGLICPLD_DEVICE_ACCESS for Mowgli
-AC_ARG_VAR(MOWGLICPLD_DEVICE_ACCESS, [Turn off MOWGLICPLD hardware access])
-AS_IF([test "x$enable_turn_off_mowglicpld_access" != "xyes"],
+AC_ARG_VAR(MOWGLICPLD_DEVICE_ACCESS, [Turn on MOWGLICPLD hardware access])
+AS_IF([test "x$enable_turn_on_mowglicpld_access" == "xyes"],
       [MOWGLICPLD_DEVICE_ACCESS="yes"]
-      AC_DEFINE_UNQUOTED([MOWGLICPLD_DEVICE_ACCESS], ["$MOWGLICPLD_DEVICE_ACCESS"], [Turn off MIHAWKCPLD hardware access])
+      AC_DEFINE_UNQUOTED([MOWGLICPLD_DEVICE_ACCESS], ["$MOWGLICPLD_DEVICE_ACCESS"], [Turn on MOWGLICPLD hardware access])
 )
 
 AC_ARG_VAR(UCD90160_DEF_YAML_FILE,
